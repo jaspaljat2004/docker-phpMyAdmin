@@ -1,0 +1,50 @@
+version: '3.9'  # Use the latest version of Docker Compose syntax
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: my_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    networks:
+      - my_network
+
+  php:
+    image: php:latest
+    container_name: my_php
+    volumes:
+      - ./php:/var/www/html
+    networks:
+      - my_network
+
+  mysql:
+    image: mysql:latest
+    container_name: my_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: your_mysql_root_password
+      MYSQL_DATABASE: your_mysql_database_name
+      MYSQL_USER: your_mysql_username
+      MYSQL_PASSWORD: your_mysql_user_password
+    volumes:
+      - ./mysql:/var/lib/mysql
+    networks:
+      - my_network
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: my_phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: your_mysql_root_password
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
